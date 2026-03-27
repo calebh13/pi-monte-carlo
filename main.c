@@ -11,7 +11,7 @@
 typedef unsigned long long ull;
 
 const char* PI_STR = "3.14159265358979323846264438327";
-const int DEBUG = 0;
+const int SEC_TO_US = 1000000;
 
 int is_inside_circle(double x, double y)
 {
@@ -39,9 +39,8 @@ double estimate_pi(ull n, long p)
     {
         assert(p == omp_get_num_threads());
         uint thread_seed = omp_get_thread_num() + seed;
-        // todo: benchmark dynamic vs static scheduling
         #pragma omp for schedule(static)
-        for(int i = 0; i < n; i++) {
+        for(ull i = 0; i < n; i++) {
             double x = (double)rand_r(&thread_seed) / RAND_MAX;
             double y = (double)rand_r(&thread_seed) / RAND_MAX;
             points_in_circle += is_inside_circle(x, y);
@@ -62,7 +61,6 @@ int calculate_precision(double pi_estimate)
     for(; i < len; i++) {
         if (estimate_str[i] != PI_STR[i]) break;
     }
-    if (i >= 2) i--; // don't include the '.' as an accurate digit
     return i;
 }
 
@@ -94,9 +92,12 @@ int main(int argc, char* argv[])
         printf("This may result in significant performance degradation.\n");
     }
     
+    double start = omp_get_wtime();
     double pi_estimate = estimate_pi(n, p);
-    printf("Pi estimate: %.14f\n", pi_estimate);
+    double end = omp_get_wtime();
     int precision = calculate_precision(pi_estimate);
+    printf("Time: %d us\n", (int)((end - start) * SEC_TO_US));
+    printf("Pi estimate: %.14f\n", pi_estimate);
     printf("Accurate digits: %d\n", precision);
 
     return 0;
