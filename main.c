@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
     }
     int procs = omp_get_num_procs();
     if (p > (long)procs) {
-        printf("Warning: creating more threads (%ld) than available processors (%d).\n", p, procs);
+        printf("Warning: creating more threads (%ld) than available processors (%d). ", p, procs);
         printf("This may result in significant performance degradation.\n");
     }
     
