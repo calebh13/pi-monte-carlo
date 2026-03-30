@@ -95,9 +95,9 @@ int main(int argc, char* argv[])
     double pi_estimate = estimate_pi(n, p);
     double end = omp_get_wtime();
     int precision = calculate_precision(pi_estimate);
-    printf("Time: %d us\n", (int)((end - start) * SEC_TO_US));
-    printf("Pi estimate: %.14f\n", pi_estimate);
-    printf("Accurate digits: %d\n", precision);
+    // Format: n, p, time (us), accuracy
+    printf("%lld,%ld,%d,%d\n", n, p, (int)((end - start) * SEC_TO_US), precision);
+    // printf("Pi estimate: %.14f\n", pi_estimate);
 
     return 0;
 }
