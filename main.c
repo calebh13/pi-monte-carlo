@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <math.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <limits.h>
@@ -15,7 +14,9 @@ const int SEC_TO_US = 1000000;
 
 int is_inside_circle(double x, double y)
 {
-    return sqrt(pow(y - 0.5, 2) + pow(x - 0.5, 2)) < 0.5;
+    // Compare r^2 < (0.5)^2
+    double dx = x - 0.5, dy = y - 0.5;
+    return dx*dx + dy*dy < 0.25; 
 }
 
 double estimate_pi(ull n, long p)
@@ -61,6 +62,7 @@ int calculate_precision(double pi_estimate)
     for(; i < len; i++) {
         if (estimate_str[i] != PI_STR[i]) break;
     }
+    if (i >= 2) i--; // don't count '.'
     return i;
 }
 
@@ -69,7 +71,15 @@ int main(int argc, char* argv[])
     /* 
      * Arguments:
      * n: number of darts to throw
-     * p: number of threads
+     * p: number 
+Summary
+Issue	Severity	Impact
+calculate_precision off by 2	Medium	Misleading output
+rand_r period & correlated seeds	High	Hard accuracy ceiling ~7 digits
+sqrt in circle test	Low	Performance only
+Monte Carlo convergence rate	Fundamental	Can't exceed ~8 digits without 10¹⁶+ samples
+
+The RNG fix will likely push you from a hard ~7-digit wall to the theorof threads
      */    
 
     if (argc < 3) {
