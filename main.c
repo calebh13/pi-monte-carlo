@@ -62,25 +62,14 @@ int calculate_precision(double pi_estimate)
     for(; i < len; i++) {
         if (estimate_str[i] != PI_STR[i]) break;
     }
-    if (i >= 2) i--; // don't count '.'
     return i;
 }
 
 int main(int argc, char* argv[])
-{
-    /* 
-     * Arguments:
+{ 
+    /* Arguments:
      * n: number of darts to throw
-     * p: number 
-Summary
-Issue	Severity	Impact
-calculate_precision off by 2	Medium	Misleading output
-rand_r period & correlated seeds	High	Hard accuracy ceiling ~7 digits
-sqrt in circle test	Low	Performance only
-Monte Carlo convergence rate	Fundamental	Can't exceed ~8 digits without 10¹⁶+ samples
-
-The RNG fix will likely push you from a hard ~7-digit wall to the theorof threads
-     */    
+     * p: number of threads */    
 
     if (argc < 3) {
         printf("Usage: %s <n> <p>\nn: number of darts to throw\np: number of threads\n", argv[0]);
